@@ -2,10 +2,8 @@ package com.fawry.productcatalog.controller;
 
 import com.fawry.productcatalog.dto.CategoryDTO;
 import com.fawry.productcatalog.dto.ProductDTO;
-import com.fawry.productcatalog.exception.EntityNotFoundException;
 import com.fawry.productcatalog.service.implemenation.CategoryServiceImpl;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

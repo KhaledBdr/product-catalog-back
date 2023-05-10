@@ -2,7 +2,6 @@ package com.fawry.productcatalog.service;
 
 import com.fawry.productcatalog.dto.CategoryDTO;
 import com.fawry.productcatalog.dto.ProductDTO;
-import com.fawry.productcatalog.entity.Category;
 
 import java.util.List;
 
