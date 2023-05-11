@@ -4,13 +4,16 @@ import com.fawry.productcatalog.entity.Category;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductDTO {
     private Long id;
     @NotNull(message = "(name)"+"{validation.required}")
