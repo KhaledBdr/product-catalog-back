@@ -12,6 +12,14 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+    @Transactional
+    @Modifying
+    @Query(value = "update product  set deleted = ?1 where id = ?2", nativeQuery=true)
+
+    int updateDeletedById(Boolean deleted, Long id);
+    List<Product> findByCategoryOrPriceBetween(Category category , double priceStart, double priceEnd);
+
+    List<Product> findByPriceBetweenAndCategory(double priceStart, double priceEnd, Category category);
     List<Product> findByCategory(Category category);
     @Transactional
     @Modifying

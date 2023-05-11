@@ -12,5 +12,7 @@ public interface CategoryService {
     List<CategoryDTO> getAll();
     CategoryDTO editCategoryName(CategoryDTO category);
     List<ProductDTO> getCategoryProducts(Long id);
-    void delete (Long id);
+    void deleteById (Long id);
+
+    void activate(Long id);
 }

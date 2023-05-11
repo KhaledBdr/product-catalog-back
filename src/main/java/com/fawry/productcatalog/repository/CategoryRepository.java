@@ -10,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CategoryRepository extends JpaRepository<Category , Long> {
     @Transactional
     @Modifying
-    @Query("update Category c set c.name = ?1 where c.id = ?2")
+    @Query(value = "update Category set deleted = ?1 where id = ?2" , nativeQuery = true)
+    int updateDeletedById(Boolean deleted, Long id);
+    @Transactional
+    @Modifying
+    @Query("update Category set name = ?1 where id = ?2")
     int updateNameById(String name, Long id);
 }

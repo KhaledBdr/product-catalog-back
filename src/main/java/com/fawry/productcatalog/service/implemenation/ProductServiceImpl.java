@@ -1,12 +1,10 @@
 package com.fawry.productcatalog.service.implemenation;
 
-import com.fawry.productcatalog.dto.ProductDTO;
-import com.fawry.productcatalog.dto.UpdateProductNameDTO;
-import com.fawry.productcatalog.dto.UpdateProductPriceDTO;
-import com.fawry.productcatalog.dto.UpdateProductQuantityDTO;
+import com.fawry.productcatalog.dto.*;
 import com.fawry.productcatalog.entity.Category;
 import com.fawry.productcatalog.entity.Product;
 import com.fawry.productcatalog.exception.EntityNotFoundException;
+import com.fawry.productcatalog.mapper.CategoryMapper;
 import com.fawry.productcatalog.mapper.ProductMapper;
 import com.fawry.productcatalog.mapper.UpdateProductMapper;
 import com.fawry.productcatalog.repository.ProductRepository;
@@ -23,6 +21,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private CategoryMapper categoryMapper;
     @Autowired
     private UpdateProductMapper updateMapper;
     @Override
@@ -46,6 +46,23 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(productMapper::map)
                 .collect(Collectors.toList());
+        return productDTOList;
+    }
+
+    @Override
+    public List<ProductDTO> filterByPriceAndCategory(CategoryDTO category, Double minPrice, Double maxPrice) {
+        List<ProductDTO> productDTOList = productRepository
+                .findByPriceBetweenAndCategory(minPrice, maxPrice, categoryMapper.unmap(category))
+                .stream().map(productMapper::map).collect(Collectors.toList());
+        return productDTOList;
+    }
+//Error
+    @Override
+    public List<ProductDTO> filterByPriceOrCategory(CategoryDTO category, Double minPrice, Double maxPrice) {
+        List<ProductDTO> productDTOList = productRepository
+                .findByCategoryOrPriceBetween(categoryMapper.unmap(category) , maxPrice, maxPrice)
+                .stream().map(productMapper::map).collect(Collectors.toList());
+        System.out.println(productDTOList.size());
         return productDTOList;
     }
 
@@ -90,5 +107,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public void activate(Long id) {
+        int i = productRepository.updateDeletedById(false, id);
+        if (i == 0 )
+            throw new EntityNotFoundException();
     }
 }

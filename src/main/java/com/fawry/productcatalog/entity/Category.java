@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
 @Setter
@@ -13,6 +15,8 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SQLDelete(sql = "UPDATE category SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Category {
     @Id
     @SequenceGenerator(name = "category_id_seq", sequenceName = "category_id_seq" , allocationSize = 1)
@@ -22,6 +26,6 @@ public class Category {
     @NotNull
     @Length(min = 2 , message ="{validation.name.length}")
     private String name;
-
+    private Boolean deleted = false;
     private String description;
 }

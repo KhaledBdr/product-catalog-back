@@ -38,8 +38,13 @@ public class CategoryController {
     public CategoryDTO editCategoryName(@RequestBody @Valid CategoryDTO category) {
         return categoryService.editCategoryName(category);
     }
+    // Error
     @DeleteMapping("/delete/{id}")
     private void deleteCategory(@PathVariable("id") Long id) {
-        categoryService.delete(id);
+        categoryService.deleteById(id);
+    }
+    @PutMapping("/activate/{id}")
+    public void activate(@PathVariable Long id) {
+        categoryService.activate(id);
     }
 }

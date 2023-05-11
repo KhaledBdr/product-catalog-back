@@ -7,12 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE product SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Product {
     @SequenceGenerator(name = "product_id_seq", sequenceName = "product_id_seq" , allocationSize = 1 )
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "product_id_seq")
@@ -33,6 +37,7 @@ public class Product {
     private int quantity;
     @ManyToOne
     private Category category;
+    private Boolean deleted = false;
 
     public Product(String name, String nameAr, String description, double price, int quantity, Category category) {
         this.name = name;
