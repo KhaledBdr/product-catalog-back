@@ -1,11 +1,9 @@
 package com.fawry.productcatalog.service;
 
-import com.fawry.productcatalog.dto.ProductDTO;
-import com.fawry.productcatalog.dto.UpdateProductNameDTO;
-import com.fawry.productcatalog.dto.UpdateProductPriceDTO;
-import com.fawry.productcatalog.dto.UpdateProductQuantityDTO;
+import com.fawry.productcatalog.dto.*;
 import com.fawry.productcatalog.entity.Category;
 import com.fawry.productcatalog.entity.Product;
+import com.fawry.productcatalog.mapper.CategoryMapper;
 import com.fawry.productcatalog.mapper.ProductMapper;
 import com.fawry.productcatalog.repository.ProductRepository;
 import com.fawry.productcatalog.service.implemenation.ProductServiceImpl;
@@ -25,6 +23,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 
 @SpringBootTest
 public class ProductServiceTest {
@@ -34,12 +33,16 @@ public class ProductServiceTest {
     private ProductRepository productRepository;
     @Mock
     private ProductMapper productMapper;
+    @Mock
+    private CategoryMapper categoryMapper;
     Long id = 1L;
     String name = "test";
     String nameAr = "اختبار";
     double price = 11.0;
     int quantity = 20;
     Category category = new Category(1L, "catTest" ,"");
+    CategoryDTO emptyCategoryDTO = new CategoryDTO(1L , "" , "");
+    Category emptyCategory = new Category(1L , "" , "");
     private ProductDTO productDTO = new ProductDTO(id,name , nameAr,"",price,quantity,category);
     private Product product = new Product(id,name , nameAr,"",price,quantity,category);
 
@@ -56,6 +59,19 @@ public class ProductServiceTest {
                     .thenReturn(productDTO);
             Mockito.when(productMapper.unmap(productDTO))
                     .thenReturn(product);
+            Mockito.when( productRepository.findByCategory(any()))
+                    .thenReturn(List.of(product));
+            Mockito.when(productRepository.findByPriceBetweenAndCategory(
+                    0 , 100 , emptyCategory))
+                    .thenReturn(List.of(product));
+            Mockito.when(categoryMapper.map(category))
+                    .thenReturn(emptyCategoryDTO);
+            Mockito.when(categoryMapper.unmap(emptyCategoryDTO))
+                    .thenReturn(emptyCategory);
+            Mockito.when(
+                    productRepository.findByCategoryOrPriceBetween(emptyCategory , 100.0 ,100.0)
+                    )
+                    .thenReturn(List.of(product));
         }
     }
 
@@ -101,7 +117,6 @@ public class ProductServiceTest {
 
         Mockito.when(productMapper.map(excepectedProduct))
                 .thenReturn(productDTO);
-
         assertEquals(productDTO , productService.editProductName(serviceParam));
     }
 
@@ -134,4 +149,23 @@ public class ProductServiceTest {
                 .thenReturn(productDTO);
         assertEquals(productDTO,productService.editProductQuantity(serviceParam));
     }
+    @Test
+    public void filterByCategoryTest(){
+        List<ProductDTO> dtoList = productService.filterByCategory(1L);
+        assertEquals(List.of(productDTO) , dtoList);
     }
+    @Test
+    public void filterByPriceAndCategoryTest() {
+        List<ProductDTO> dtoList = productService
+                .filterByPriceAndCategory(emptyCategoryDTO, 0.0, 100.0);
+        assertEquals(List.of(productDTO) , dtoList);
+    }
+    @Test
+    public void filterByPriceOrCategoryTest(){
+        List<ProductDTO> productDTOS = productService
+                .filterByPriceOrCategory(emptyCategoryDTO, 100.0, 150.0);
+        assertEquals(List.of(productDTO) , productDTOS);
+    }
+//    void delete (Long id);
+//    void activate(Long id);
+}
