@@ -28,13 +28,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO getById(Long id) {
+    public CategoryDTO findById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
         return categoryMapper.map(category);
     }
 
     @Override
-    public List<CategoryDTO> getAll() {
+    public List<CategoryDTO> findAll() {
         List<CategoryDTO> categoryDTOList = categoryRepository
                 .findAll()
                 .stream()
@@ -52,14 +52,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<ProductDTO> getCategoryProducts(Long id) {
-        getById(id);
+    public List<ProductDTO> findCategoryProducts(Long id) {
+        findById(id);
         return productService.filterByCategory(id);
     }
 
     @Override
     public void deleteById(Long id) {
-        categoryRepository.deleteById(id);
+        categoryRepository.updateDeletedById(true , id);
     }
 
     @Override

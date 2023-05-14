@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getById(Long id) {
+    public ProductDTO findById(Long id) {
         Product product = productRepository
                 .findById(id)
                 .orElseThrow(()-> new EntityNotFoundException());
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> getAll() {
+    public List<ProductDTO> findAll() {
         List<ProductDTO> productDTOList = productRepository
                 .findAll()
                 .stream()
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> filterByPriceOrCategory(CategoryDTO category, Double minPrice, Double maxPrice) {
         List<ProductDTO> productDTOList = productRepository
-                .findByCategoryOrPriceBetween(categoryMapper.unmap(category) , maxPrice, maxPrice)
+                .findByCategoryOrPriceBetween(categoryMapper.unmap(category) , minPrice, maxPrice)
                 .stream().map(productMapper::map).collect(Collectors.toList());
         System.out.println(productDTOList.size());
         return productDTOList;

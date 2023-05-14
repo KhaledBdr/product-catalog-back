@@ -18,11 +18,11 @@ public class CategoryController {
     private CategoryServiceImpl categoryService;
     @GetMapping("/all")
     public List<CategoryDTO> getAll() {
-        return categoryService.getAll();
+        return categoryService.findAll();
     }
     @GetMapping("/id/{id}")
     public CategoryDTO getById(@PathVariable("id") Long id) {
-        return categoryService.getById(id);
+        return categoryService.findById(id);
     }
 
     @PostMapping
@@ -31,7 +31,7 @@ public class CategoryController {
     }
     @GetMapping("/{id}/products")
     public List<ProductDTO> getAllByCategory(@PathVariable("id") Long categoryID) {
-        return categoryService.getCategoryProducts(categoryID);
+        return categoryService.findCategoryProducts(categoryID);
     }
 
     @PutMapping("/updateName")
@@ -41,7 +41,7 @@ public class CategoryController {
 
     // Error
     @DeleteMapping("/delete/{id}")
-    private void deleteCategory(@PathVariable("id") Long id) {
+    public void deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteById(id);
     }
     @PutMapping("/activate/{id}")

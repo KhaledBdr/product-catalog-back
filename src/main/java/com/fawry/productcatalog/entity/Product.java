@@ -48,7 +48,8 @@ public class Product {
         this.category = category;
     }
 
-    public Product(Long id, String name, String nameAr, String description, double price, int quantity, Category category) {
+    public Product(Long id, String name, String nameAr, String description, double price, int quantity,
+                   Category category) {
         this.id = id;
         this.name = name;
         this.nameAr = nameAr;

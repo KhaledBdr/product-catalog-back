@@ -7,15 +7,12 @@ import com.fawry.productcatalog.mapper.CategoryMapper;
 import com.fawry.productcatalog.mapper.ProductMapper;
 import com.fawry.productcatalog.repository.ProductRepository;
 import com.fawry.productcatalog.service.implemenation.ProductServiceImpl;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.filter.TypeExcludeFilters;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -23,7 +20,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
 
 @SpringBootTest
 public class ProductServiceTest {
@@ -80,14 +76,14 @@ public class ProductServiceTest {
         Mockito.when(productRepository.findById(1L))
                 .thenReturn(Optional.of(product));
 
-        assertEquals(productDTO ,productService.getById(1L));
+        assertEquals(productDTO ,productService.findById(1L));
     }
     @Test
     public void getAllTest(){
         Mockito.when(productRepository.findAll())
                 .thenReturn(List.of(product));
 
-        assertEquals(List.of(productDTO) , productService.getAll() );
+        assertEquals(List.of(productDTO) , productService.findAll() );
     }
     @Test
     public void AddElementTest(){

@@ -16,7 +16,7 @@ public class ProductController {
     @Autowired private ProductServiceImpl productService;
     @GetMapping("/all")
     public List<ProductDTO> getAll() {
-        return productService.getAll();
+        return productService.findAll();
     }
     @GetMapping("/filter/categoryAndPrice")
     public List<ProductDTO> filterByCatAndPriceWay2(
@@ -31,7 +31,7 @@ public class ProductController {
                 );
     }
     @GetMapping("/filter/categoryOrPrice")
-    public List<ProductDTO> filterByCatOrPrice(
+    public List<ProductDTO> filterByCategoryOrPrice(
             @RequestBody FilterDTO input
     ) {
         CategoryDTO categoryDTO = new CategoryDTO();
@@ -40,7 +40,7 @@ public class ProductController {
     }
     @GetMapping("/id/{id}")
     public ProductDTO getById(@PathVariable("id") Long id) {
-        return productService.getById(id);
+        return productService.findById(id);
     }
     @PostMapping
     public ProductDTO add(@RequestBody @Valid ProductDTO productDTO) {

@@ -3,8 +3,6 @@ package com.fawry.productcatalog.service;
 import com.fawry.productcatalog.dto.CategoryDTO;
 import com.fawry.productcatalog.dto.ProductDTO;
 import com.fawry.productcatalog.entity.Category;
-import com.fawry.productcatalog.entity.Product;
-import com.fawry.productcatalog.exception.EntityNotFoundException;
 import com.fawry.productcatalog.mapper.CategoryMapper;
 import com.fawry.productcatalog.repository.CategoryRepository;
 import com.fawry.productcatalog.service.implemenation.CategoryServiceImpl;
@@ -15,12 +13,10 @@ import org.junit.jupiter.api.TestInfo;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,7 +64,7 @@ public class CategoryServiceTest {
     public void getAllTest() {
         Mockito.when(categoryRepository.findAll())
                 .thenReturn(List.of(category));
-        assertEquals(List.of(categoryDTO) , categoryService.getAll());
+        assertEquals(List.of(categoryDTO) , categoryService.findAll());
     }
 
     @Test
@@ -94,10 +90,10 @@ public class CategoryServiceTest {
                 20,
                 category
         );
-        Mockito.when(categoryService.getById(id))
+        Mockito.when(categoryService.findById(id))
                 .thenReturn(categoryDTO);
         Mockito.when(productService.filterByCategory(id))
                 .thenReturn(List.of(product));
-        assertEquals(List.of(product) , categoryService.getCategoryProducts(id));
+        assertEquals(List.of(product) , categoryService.findCategoryProducts(id));
     }
 }

@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ProductService {
     ProductDTO addProduct(ProductDTO productDTO);
-    ProductDTO getById(Long id);
-    List<ProductDTO> getAll();
+    ProductDTO findById(Long id);
+    List<ProductDTO> findAll();
     ProductDTO editProductQuantity(UpdateProductQuantityDTO productDTO);
     ProductDTO editProductPrice(UpdateProductPriceDTO productDTO);
     ProductDTO editProductName(UpdateProductNameDTO productDTO);

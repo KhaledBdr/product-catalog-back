@@ -17,6 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "update product  set deleted = ?1 where id = ?2", nativeQuery=true)
 
     int updateDeletedById(Boolean deleted, Long id);
+    @Query(value = "select p from Product p where category = ?1 or price between ?2 and ?3")
     List<Product> findByCategoryOrPriceBetween(Category category , double priceStart, double priceEnd);
 
     List<Product> findByPriceBetweenAndCategory(double priceStart, double priceEnd, Category category);
