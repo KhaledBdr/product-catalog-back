@@ -9,19 +9,23 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Transactional
     @Modifying
-    @Query(value = "update product  set deleted = ?1 where id = ?2", nativeQuery=true)
-
-    int updateDeletedById(Boolean deleted, Long id);
-    @Query(value = "select p from Product p where category = ?1 or price between ?2 and ?3")
+    @Query(value = "update Product set deleted = ?1 where id = ?2")
+    int changeDeletedState(Boolean deleted , Long id);
+    @Override
+    @Query (value = " Select p from Product p")
+    List<Product> findAll();
+    @Query (value = "Select p from Product p where p.deleted = false")
+    List<Product> findAllActive();
+    @Query(value = "select p from Product p where p.deleted = false AND (category" +
+            " = coalesce(?1,p.category) or price between" +
+            " coalesce(?2,p.price) and coalesce(?3,sum(p.price+20))) ")
     List<Product> findByCategoryOrPriceBetween(Category category , double priceStart, double priceEnd);
 
-    List<Product> findByPriceBetweenAndCategory(double priceStart, double priceEnd, Category category);
-    List<Product> findByCategory(Category category);
     @Transactional
     @Modifying
     @Query("update Product p set p.name = ?1, p.nameAr = ?2 where p.id = ?3")

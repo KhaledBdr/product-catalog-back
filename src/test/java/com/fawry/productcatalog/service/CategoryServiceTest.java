@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
-public class CategoryServiceTest {
+class CategoryServiceTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
     @Mock
@@ -36,7 +36,7 @@ public class CategoryServiceTest {
     CategoryDTO categoryDTO = new CategoryDTO(id, name , "");
     Category category = new Category(id, name , "");
     @BeforeEach
-    public void initializer(TestInfo info) {
+    void initializer(TestInfo info) {
         if (info.getDisplayName().equals("editCategoryNameTest")){
             return;
         }
@@ -49,26 +49,26 @@ public class CategoryServiceTest {
                 .thenReturn(Optional.of(category));
     }
     @Test
-    public void addCategoryTest() {
+    void addCategoryTest() {
         Mockito.when(categoryRepository.save(category))
                 .thenReturn(category);
         assertEquals(categoryDTO, categoryService.addCategory(categoryDTO));
     }
 
     @Test
-    public void getByIdTest() {
+    void getByIdTest() {
         assertEquals(categoryDTO , categoryService.addCategory(categoryDTO));
     }
 
     @Test
-    public void getAllTest() {
+    void getAllTest() {
         Mockito.when(categoryRepository.findAll())
                 .thenReturn(List.of(category));
         assertEquals(List.of(categoryDTO) , categoryService.findAll());
     }
 
     @Test
-    public void editCategoryNameTest() {
+    void editCategoryNameTest() {
         CategoryDTO updatedDTO = new CategoryDTO(1L , "cat2" , "");
         Category updated = new Category(1L , "cat2" , "");
         Mockito.when(categoryRepository.updateNameById(updatedDTO.getName() , updatedDTO.getId()))
@@ -78,22 +78,5 @@ public class CategoryServiceTest {
         Mockito.when(categoryRepository.findById(id))
                         .thenReturn(Optional.of(updated));
         assertEquals(updatedDTO , categoryService.editCategoryName(updatedDTO));
-    }
-    @Test
-    public void getCategoryProductsTest() {
-        ProductDTO product = new ProductDTO(
-                1L,
-                "pro",
-                "منتج",
-                "",
-                20.0,
-                20,
-                category
-        );
-        Mockito.when(categoryService.findById(id))
-                .thenReturn(categoryDTO);
-        Mockito.when(productService.filterByCategory(id))
-                .thenReturn(List.of(product));
-        assertEquals(List.of(product) , categoryService.findCategoryProducts(id));
     }
 }

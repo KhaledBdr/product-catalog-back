@@ -16,7 +16,6 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Entity
 @SQLDelete(sql = "UPDATE category SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 public class Category {
     @Id
     @SequenceGenerator(name = "category_id_seq", sequenceName = "category_id_seq" , allocationSize = 1)

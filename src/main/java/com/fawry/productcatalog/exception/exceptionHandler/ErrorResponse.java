@@ -1,6 +1,5 @@
-package com.fawry.productcatalog.exception;
+package com.fawry.productcatalog.exception.exceptionHandler;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

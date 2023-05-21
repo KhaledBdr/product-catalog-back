@@ -1,7 +1,6 @@
 package com.fawry.productcatalog.service.implemenation;
 
 import com.fawry.productcatalog.dto.CategoryDTO;
-import com.fawry.productcatalog.dto.ProductDTO;
 import com.fawry.productcatalog.entity.Category;
 import com.fawry.productcatalog.exception.EntityNotFoundException;
 import com.fawry.productcatalog.mapper.CategoryMapper;
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -29,32 +28,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDTO findById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        Category category = categoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return categoryMapper.map(category);
     }
 
     @Override
     public List<CategoryDTO> findAll() {
-        List<CategoryDTO> categoryDTOList = categoryRepository
+        return categoryRepository
                 .findAll()
                 .stream()
                 .map(categoryMapper::map)
-                .collect(Collectors.toList());
-        return categoryDTOList;
+                .toList();
     }
+
 
     @Override
     public CategoryDTO editCategoryName(CategoryDTO category) {
         int affectedRows = categoryRepository.updateNameById(category.getName(), category.getId());
         if (affectedRows == 0 )
             throw new EntityNotFoundException();
-        return categoryMapper.map(categoryRepository.findById(category.getId()).get());
-    }
-
-    @Override
-    public List<ProductDTO> findCategoryProducts(Long id) {
-        findById(id);
-        return productService.filterByCategory(id);
+        Optional<Category> updatedCategory = categoryRepository.findById(category.getId());
+        if (updatedCategory.isPresent())
+            return categoryMapper.map(updatedCategory.get());
+        else throw new EntityNotFoundException();
     }
 
     @Override
@@ -67,5 +63,14 @@ public class CategoryServiceImpl implements CategoryService {
         int i = categoryRepository.updateDeletedById(false, id);
         if (i == 0 )
             throw new EntityNotFoundException();
+    }
+
+    @Override
+    public List<CategoryDTO> findAllActive() {
+        return categoryRepository
+                .findAllActive()
+                .stream()
+                .map(categoryMapper::map)
+                .toList();
     }
 }

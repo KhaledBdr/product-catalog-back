@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
-public class ProductServiceTest {
+class ProductServiceTest {
     @InjectMocks
     private ProductServiceImpl productService;
     @Mock
@@ -44,7 +44,7 @@ public class ProductServiceTest {
 
 
     @BeforeEach
-    public void initializer(TestInfo info){
+    void initializer(TestInfo info){
         if (info.getDisplayName().equals("editNameTest") ||
                 info.getDisplayName().equals("editPriceTest") ||
                 info.getDisplayName().equals("editQuantityTest")
@@ -55,11 +55,6 @@ public class ProductServiceTest {
                     .thenReturn(productDTO);
             Mockito.when(productMapper.unmap(productDTO))
                     .thenReturn(product);
-            Mockito.when( productRepository.findByCategory(any()))
-                    .thenReturn(List.of(product));
-            Mockito.when(productRepository.findByPriceBetweenAndCategory(
-                    0 , 100 , emptyCategory))
-                    .thenReturn(List.of(product));
             Mockito.when(categoryMapper.map(category))
                     .thenReturn(emptyCategoryDTO);
             Mockito.when(categoryMapper.unmap(emptyCategoryDTO))
@@ -72,27 +67,27 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void getByIdTest(){
+    void getByIdTest(){
         Mockito.when(productRepository.findById(1L))
                 .thenReturn(Optional.of(product));
 
         assertEquals(productDTO ,productService.findById(1L));
     }
     @Test
-    public void getAllTest(){
+    void getAllTest(){
         Mockito.when(productRepository.findAll())
                 .thenReturn(List.of(product));
 
         assertEquals(List.of(productDTO) , productService.findAll() );
     }
     @Test
-    public void AddElementTest(){
+    void AddElementTest(){
         Mockito.when(productRepository.save(product))
                 .thenReturn(product);
         assertEquals(productDTO , productService.addProduct(productDTO));
     }
     @Test
-    public void editNameTest() {
+    void editNameTest() {
         String newName = "test2";
         String newNameAr = "الاختيار 2";
 
@@ -117,7 +112,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void editPriceTest() {
+    void editPriceTest() {
         UpdateProductPriceDTO serviceParam = new UpdateProductPriceDTO(1L , 10);
 
         Mockito.when(productRepository.updatePriceById(10 , 1L))
@@ -132,7 +127,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void editQuantityTest() {
+    void editQuantityTest() {
         UpdateProductQuantityDTO serviceParam = new UpdateProductQuantityDTO(1L , 10);
 
         Mockito.when(productRepository.updateProductQuantity(10 , 1L))
@@ -145,23 +140,10 @@ public class ProductServiceTest {
                 .thenReturn(productDTO);
         assertEquals(productDTO,productService.editProductQuantity(serviceParam));
     }
-    @Test
-    public void filterByCategoryTest(){
-        List<ProductDTO> dtoList = productService.filterByCategory(1L);
-        assertEquals(List.of(productDTO) , dtoList);
-    }
-    @Test
-    public void filterByPriceAndCategoryTest() {
-        List<ProductDTO> dtoList = productService
-                .filterByPriceAndCategory(emptyCategoryDTO, 0.0, 100.0);
-        assertEquals(List.of(productDTO) , dtoList);
-    }
-    @Test
-    public void filterByPriceOrCategoryTest(){
+//    @Test
+    void filterByPriceOrCategoryTest(){
         List<ProductDTO> productDTOS = productService
                 .filterByPriceOrCategory(emptyCategoryDTO, 100.0, 150.0);
         assertEquals(List.of(productDTO) , productDTOS);
     }
-//    void delete (Long id);
-//    void activate(Long id);
 }

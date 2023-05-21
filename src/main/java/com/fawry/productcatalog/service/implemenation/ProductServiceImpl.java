@@ -1,7 +1,6 @@
 package com.fawry.productcatalog.service.implemenation;
 
 import com.fawry.productcatalog.dto.*;
-import com.fawry.productcatalog.entity.Category;
 import com.fawry.productcatalog.entity.Product;
 import com.fawry.productcatalog.exception.EntityNotFoundException;
 import com.fawry.productcatalog.mapper.CategoryMapper;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 @Service
 
 public class ProductServiceImpl implements ProductService {
@@ -35,35 +33,32 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO findById(Long id) {
         Product product = productRepository
                 .findById(id)
-                .orElseThrow(()-> new EntityNotFoundException());
+                .orElseThrow(EntityNotFoundException::new);
         return productMapper.map(product);
     }
 
     @Override
     public List<ProductDTO> findAll() {
-        List<ProductDTO> productDTOList = productRepository
+        return productRepository
                 .findAll()
                 .stream()
                 .map(productMapper::map)
-                .collect(Collectors.toList());
-        return productDTOList;
+                .toList();
     }
 
     @Override
-    public List<ProductDTO> filterByPriceAndCategory(CategoryDTO category, Double minPrice, Double maxPrice) {
-        List<ProductDTO> productDTOList = productRepository
-                .findByPriceBetweenAndCategory(minPrice, maxPrice, categoryMapper.unmap(category))
-                .stream().map(productMapper::map).collect(Collectors.toList());
-        return productDTOList;
+    public List<ProductDTO> findAllActive() {
+        return productRepository
+                .findAllActive()
+                .stream()
+                .map(productMapper::map)
+                .toList();
     }
-//Error
     @Override
     public List<ProductDTO> filterByPriceOrCategory(CategoryDTO category, Double minPrice, Double maxPrice) {
-        List<ProductDTO> productDTOList = productRepository
+        return productRepository
                 .findByCategoryOrPriceBetween(categoryMapper.unmap(category) , minPrice, maxPrice)
-                .stream().map(productMapper::map).collect(Collectors.toList());
-        System.out.println(productDTOList.size());
-        return productDTOList;
+                .stream().map(productMapper::map).toList();
     }
 
     @Override
@@ -82,16 +77,6 @@ public class ProductServiceImpl implements ProductService {
             throw new EntityNotFoundException();
         return productMapper.map(productRepository.findById(productDTO.getId()).get());
     }
-    public List<ProductDTO> filterByCategory(Long id){
-        Category category = new Category();
-        category.setId(id);
-        List<ProductDTO> productDTOList = productRepository.
-                findByCategory(category)
-                .stream()
-                .map(productMapper::map)
-                .collect(Collectors.toList());
-        return productDTOList;
-    }
     @Override
     public ProductDTO editProductName(UpdateProductNameDTO updateProduct) {
        int affectedRows = productRepository.updateNameAndNameArById(
@@ -106,12 +91,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long id) {
-        productRepository.deleteById(id);
+        productRepository.changeDeletedState( true , id);
     }
 
     @Override
     public void activate(Long id) {
-        int i = productRepository.updateDeletedById(false, id);
+        int i = productRepository.changeDeletedState(false, id);
         if (i == 0 )
             throw new EntityNotFoundException();
     }

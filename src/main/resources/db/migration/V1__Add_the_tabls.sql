@@ -1,5 +1,5 @@
-DROP VIEW IF EXISTS category;
-DROP VIEW IF EXISTS product;
+DROP table IF EXISTS category;
+DROP table IF EXISTS product;
 
 
 CREATE TABLE  category (
@@ -16,6 +16,7 @@ CREATE TABLE product (
 	 price  FLOAT NOT NULL,
 	 description  VARCHAR(10000) DEFAULT '',
 	 quantity  INT NOT NULL,
+	 is_shipped Boolean,
 	 category_id  BIGINT NOT NULL,
 	PRIMARY KEY ( id )
 );
@@ -29,6 +30,7 @@ CREATE SEQUENCE IF NOT EXISTS  category_id_seq
     INCREMENT 1
     start 1
     OWNED BY  category.id;
-ALTER TABLE product ADD CONSTRAINT category_product_realtion FOREIGN KEY (category_id) REFERENCES category (id);
-
-
+ALTER TABLE product
+    ADD CONSTRAINT category_product_realtion
+    FOREIGN KEY (category_id)
+    REFERENCES category (id);

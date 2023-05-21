@@ -15,22 +15,14 @@ import java.util.List;
 public class ProductController {
     @Autowired private ProductServiceImpl productService;
     @GetMapping("/all")
-    public List<ProductDTO> getAll() {
+    public List<ProductDTO> getAllActiveProducts() {
+        return productService.findAllActive();
+    }
+    @GetMapping("/all/admin")
+    public List<ProductDTO> getAllProducts() {
         return productService.findAll();
     }
-    @GetMapping("/filter/categoryAndPrice")
-    public List<ProductDTO> filterByCatAndPriceWay2(
-            @RequestBody FilterDTO input) {
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setId(input.getId());
-        return productService
-                .filterByPriceAndCategory(
-                        categoryDTO ,
-                        input.getMin(),
-                        input.getMax()
-                );
-    }
-    @GetMapping("/filter/categoryOrPrice")
+    @GetMapping("/filter")
     public List<ProductDTO> filterByCategoryOrPrice(
             @RequestBody FilterDTO input
     ) {
