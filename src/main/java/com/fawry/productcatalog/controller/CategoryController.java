@@ -11,19 +11,15 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
     @Autowired
     private CategoryServiceImpl categoryService;
-    @GetMapping("/all")
-    public List<CategoryDTO> getAllActiveCategories() {
-        return categoryService.findAllActive();
+    @GetMapping()
+    public List<CategoryDTO> getAllActiveCategories(@RequestParam Boolean isAdmin) {
+        return categoryService.findAll(isAdmin);
     }
-    @GetMapping("/all/admin")
-    public List<CategoryDTO> getAllCategories() {
-        return categoryService.findAll();
-    }
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public CategoryDTO getById(@PathVariable("id") Long id) {
         return categoryService.findById(id);
     }
@@ -31,11 +27,11 @@ public class CategoryController {
     public CategoryDTO addCategory(@RequestBody @Valid CategoryDTO category){
         return categoryService.addCategory(category);
     }
-    @PutMapping("/updateName")
+    @PutMapping("/name")
     public CategoryDTO editCategoryName(@RequestBody @Valid CategoryDTO category) {
         return categoryService.editCategoryName(category);
     }
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteById(id);
     }

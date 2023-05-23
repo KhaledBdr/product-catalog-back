@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -31,16 +32,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return categoryMapper.map(category);
     }
-
-    @Override
-    public List<CategoryDTO> findAll() {
-        return categoryRepository
-                .findAll()
-                .stream()
-                .map(categoryMapper::map)
-                .toList();
-    }
-
 
     @Override
     public CategoryDTO editCategoryName(CategoryDTO category) {
@@ -66,7 +57,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO> findAllActive() {
+    public List<CategoryDTO> findAll(Boolean isAdmin) {
+        if (isAdmin == true)
+            return categoryRepository
+                    .findAll()
+                    .stream()
+                    .map(categoryMapper::map)
+                    .collect(Collectors.toList());
         return categoryRepository
                 .findAllActive()
                 .stream()

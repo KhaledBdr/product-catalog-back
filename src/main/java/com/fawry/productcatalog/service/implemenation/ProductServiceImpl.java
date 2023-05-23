@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 
 public class ProductServiceImpl implements ProductService {
@@ -38,16 +40,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> findAll() {
-        return productRepository
-                .findAll()
-                .stream()
-                .map(productMapper::map)
-                .toList();
-    }
-
-    @Override
-    public List<ProductDTO> findAllActive() {
+    public List<ProductDTO> findAll(Boolean isAdmin) {
+        if (isAdmin){
+            return productRepository.findAll().stream().map(productMapper::map).collect(Collectors.toList());
+        }
         return productRepository
                 .findAllActive()
                 .stream()

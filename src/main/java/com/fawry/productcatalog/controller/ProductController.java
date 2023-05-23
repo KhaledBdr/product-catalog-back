@@ -10,17 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 @Validated
 public class ProductController {
     @Autowired private ProductServiceImpl productService;
-    @GetMapping("/all")
-    public List<ProductDTO> getAllActiveProducts() {
-        return productService.findAllActive();
-    }
-    @GetMapping("/all/admin")
-    public List<ProductDTO> getAllProducts() {
-        return productService.findAll();
+    @GetMapping
+    public List<ProductDTO> getAllProducts(@RequestParam Boolean isAdmin) {
+        return productService.findAll(isAdmin);
     }
     @GetMapping("/filter")
     public List<ProductDTO> filterByCategoryOrPrice(
@@ -30,7 +26,7 @@ public class ProductController {
         categoryDTO.setId(input.getId());
         return productService.filterByPriceOrCategory(categoryDTO , input.getMin() , input.getMax());
     }
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ProductDTO getById(@PathVariable("id") Long id) {
         return productService.findById(id);
     }
@@ -50,7 +46,7 @@ public class ProductController {
     public ProductDTO updateQuantity(@RequestBody @Valid UpdateProductQuantityDTO product) {
         return productService.editProductQuantity(product);
     }
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         productService.delete(id);
     }

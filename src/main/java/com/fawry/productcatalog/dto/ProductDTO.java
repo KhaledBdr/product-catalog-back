@@ -1,5 +1,6 @@
 package com.fawry.productcatalog.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fawry.productcatalog.entity.Category;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
@@ -32,6 +33,7 @@ public class ProductDTO {
     @NotNull(message = "Quantity " + "{ validation.required}")
     @Min(value = 0 , message ="{validation.quantity}")
     private int quantity;
+    @JsonIgnore
     @NotNull(message = "Category " + " {validation.required}")
     private Category category;
 }

@@ -8,10 +8,9 @@ public interface CategoryService {
 
     CategoryDTO addCategory(CategoryDTO category);
     CategoryDTO findById(Long id);
-    List<CategoryDTO> findAll();
     CategoryDTO editCategoryName(CategoryDTO category);
     void deleteById (Long id);
     void activate(Long id);
 
-    List<CategoryDTO> findAllActive();
+    List<CategoryDTO> findAll(Boolean isAdmin);
 }
